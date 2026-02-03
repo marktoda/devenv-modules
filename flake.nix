@@ -5,11 +5,6 @@
     # devenv's recommended nixpkgs pin (fast + consistent)
     nixpkgs.url = "github:cachix/devenv-nixpkgs";
 
-    devenv = {
-      url = "github:cachix/devenv";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Pin foundry here once.
     foundry = {
       url = "github:shazow/foundry.nix/stable";
@@ -22,7 +17,6 @@
     self,
     nixpkgs,
     foundry,
-    devenv,
     ...
   }: {
     # These are devenv modules you can import in any devenv shell.
