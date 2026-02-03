@@ -1,6 +1,7 @@
 {
   nixpkgs,
   foundry,
+  ...
 }: {
   lib,
   pkgs,
