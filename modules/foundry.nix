@@ -1,34 +1,23 @@
 {
-  nixpkgs,
-  foundry,
-  ...
-}: {
   lib,
   pkgs,
   config,
   ...
 }: let
   cfg = config.tooling.foundry;
-
-  # Build a pkgs that includes the foundry overlay (like shazow's example)
-  pkgsWithFoundry = import nixpkgs {
-    inherit (pkgs) system;
-    overlays = [foundry.overlay];
-  };
 in {
-  options.tooling.foundry = {
-    enable = lib.mkEnableOption "Foundry (forge/cast/anvil) from shazow/foundry.nix overlay";
-
-    withSolc = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Also include solc.";
-    };
-  };
+  options.tooling.foundry.enable =
+    lib.mkEnableOption "Foundry tooling (forge/cast/anvil)";
 
   config = lib.mkIf cfg.enable {
-    packages =
-      [pkgsWithFoundry.foundry-bin]
-      ++ lib.optionals cfg.withSolc [pkgsWithFoundry.solc];
+    packages = [pkgs.foundry-bin];
+
+    # optional niceties
+    env.FOUNDRY_PROFILE = lib.mkDefault "default";
+
+    # scripts are nice in devenv
+    scripts.forge.exec = "forge --version";
+    scripts.anvil.exec = "anvil --version";
+    scripts.cast.exec = "cast --version";
   };
 }
